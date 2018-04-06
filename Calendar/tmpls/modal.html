@@ -1,0 +1,36 @@
+<% 	event.date_start = new Date(parseInt(event.start));
+	event.date_end = new Date(parseInt(event.end)); %>
+
+<%
+function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
+}
+%>
+
+
+<table>
+<tr>
+<td><span class="modal-body-title"> Title: </span>
+<td><%= event.title %>
+<tr>
+<td><span class="modal-body-title"> Author: </span>
+<td><a href="view_profile.php?username=<%= event.username %>"><%= event.name %></a>
+<tr>
+<td><span class="modal-body-title"> Starts on </span>
+<td> <%= calendar.locale["m" + event.date_start.getMonth()] %> <%= event.date_start.getDate() %> <%= event.date_start.getFullYear() %>, at <%= formatAMPM(event.date_start) %>
+<tr>
+<td><span class="modal-body-title"> Ends on </span>
+<td><%= calendar.locale["m" + event.date_end.getMonth()] %> <%= event.date_end.getDate() %> <%= event.date_end.getFullYear() %> at <%= formatAMPM(event.date_end) %>
+</table>
+
+<p>
+<%= event.details %>
+</p>
+

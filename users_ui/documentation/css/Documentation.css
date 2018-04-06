@@ -1,0 +1,281 @@
+@import url(http://weloveiconfonts.com/api/?family=entypo);
+@import url('../Plugin/font-awesome/css/font-awesome.min.css');
+
+
+html{
+font-family:sans-serif;-ms-text-size-adjust:100%;
+-webkit-text-size-adjust:100%;
+}
+
+body{
+margin:0;
+background-color: #f0f0f0; 
+min-width:1280px;
+max-width:1500px;
+}
+
+div.left{
+float:left;
+}
+div.right{
+float:right;
+}
+
+div.home {
+margin-left:auto;
+margin-right:auto;
+width:500px;
+}
+
+div.home img {
+width: 450px;
+height: 450px;
+border-radius: 50%;
+margin-right: 10px;
+line-height:140px;
+vertical-align: middle;
+}
+
+div.home p {
+margin:0;
+text-indent:20px;
+color:orange;
+font-size:80px;
+font-weight:bold;
+letter-spacing:15px;
+text-align:center;
+font-family: Segoe UI;
+}
+
+div.home #navi ul{
+list-style:none;
+margin: 0;
+padding: 0;
+}
+
+div.home #navi li {
+padding:0;
+display:inline-block;
+padding:10px;
+}
+
+div.home #navi li a{
+color: #FACC2E;
+font-family: Papyrus;
+text-decoration:none;
+font-size:20px;
+}
+
+div.home #navi li:hover{
+border-bottom: 2px solid white;
+}
+
+
+/* ------------------------------------------------------------ *\
+|* ------------------------------------------------------------ *|
+|* Mavigation Bar Top
+|* ------------------------------------------------------------ *|
+\* ------------------------------------------------------------ */
+
+
+#cssmenu {
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  width: 100%;
+  top:0;
+  right:0;
+  z-index: 1;
+}
+#cssmenu ul {
+  background: #333333;
+  height: 55px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#cssmenu li {
+  float: right;
+  padding: 0;
+  
+}
+#cssmenu li a {
+  color: #FACC2E;
+  display: block;
+  text-align: left !important;
+  font-weight: 600;
+  line-height: 55px;
+  margin: 0px;
+  padding: 0px 15px;
+  text-align: center;
+  text-decoration: none;
+  
+}
+#cssmenu li a: {
+  background: #FB2D2D;
+  text-decoration: none;
+}
+#cssmenu ul li:hover a {
+background: #B40404;
+color: #FACC2E;
+text-decoration: none;
+-webkit-transition: color 0.2s, background 0.4s;
+}
+#cssmenu li ul {
+  display: none;
+  height: 10px;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  position: absolute;
+  width: 200px;
+  z-index: 200;
+  opacity: 0.9;
+}
+#cssmenu li:hover ul {
+  display: block;
+}
+#cssmenu li li {
+  display: block;
+  float: none;
+  margin: 0px;
+  padding: 0px;
+  width: 200px;
+  background: #333333;
+  /*this is where the rounded corners for the dropdown disappears*/
+
+}
+#cssmenu li:hover li a {
+  background: none;
+}
+#cssmenu li ul a {
+  display: block;
+  height: 50px;
+  font-size: 12px;
+  font-style: normal;
+  margin: 0px;
+  padding: 0px 10px 0px 15px;
+  text-align: left;
+}
+#cssmenu li ul a:hover,
+#cssmenu li ul li:hover a {
+  border: 0px;
+  color: #FACC2E;
+  text-decoration: none;
+  background: #B40404;
+  -webkit-box-shadow: inset 0px 0px 7px 2px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: inset 0px 0px 7px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0px 0px 7px 2px rgba(0, 0, 0, 0.3);
+}
+#cssmenu #name{
+font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+#cssmenu img{
+width: 29px;
+height: 29px;
+border-radius: 50%;
+margin-right: 10px;
+line-height:140px;
+vertical-align: middle;
+}
+
+#cssmenu li#logo:hover a{
+background:none;
+}
+
+#cssmenu span#logo{
+font-family: Old English Text MT;
+}
+
+
+
+/* ------------------------------------------------------------ *\
+|* ------------------------------------------------------------ *|
+|* Documentation
+|* ------------------------------------------------------------ *|
+\* ------------------------------------------------------------ */
+
+div.documentation #left{
+float:left;
+width:25%;
+height: 100%;
+}
+
+
+div.documentation #left #nav-side{
+border: none;
+margin: 0px;
+padding: 0px;
+position:fixed;
+font-family: Futura;
+}
+
+div.documentation #left #nav-side ul{
+list-style: none;
+margin-top:30px;
+margin-left:30px;
+padding: 0;
+font-weight:bold;
+}
+
+div.documentation #left #nav-side li{
+padding:5px;
+}
+
+div.documentation #left #nav-side li a{
+text-decoration:none;
+color: black;
+}
+
+div.documentation #left #nav-side li a:hover{
+color: #B40404;
+border-bottom: 5px solid #FACC2E;
+}
+
+
+div.documentation #right{
+float:right;
+width: 75%;
+height: 100%;
+}
+
+div.documentation #right #content{
+margin-top:30px;
+padding:0;
+font-family: Candara;
+}
+
+div.documentation #right #content h2{
+color: #B40404;
+}
+
+div.documentation #right #content p{
+text-align: justify;
+padding-right:20px;
+}
+
+div.documentation #right #content p a{
+color: #B40404;
+}
+
+div.documentation #right #content p > img{
+width:100%;
+height:100%;
+}
+
+
+
+
+
+/* ------------------------------------------------------------ *\
+|* ------------------------------------------------------------ *|
+|* ICONS
+|* ------------------------------------------------------------ *|
+\* ------------------------------------------------------------ */
+
+
+[class*="entypo-"]:before {
+  font-family: 'entypo', sans-serif;
+}

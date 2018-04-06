@@ -1,0 +1,306 @@
+Imports System.Data.OleDb
+Imports System.Data
+Imports System.Data.SqlClient
+Imports System.Windows.Forms
+Imports System.Text.RegularExpressions
+
+
+Public Class Form1
+    Dim oDataTable As DataTable
+    Dim userstable As DataTable = Nothing
+    Dim conn As OleDbConnection = New OleDbConnection()
+
+    Dim sTableName As String
+    'Public fname As String
+    'Public tname(100) As String
+    'Public fieldname As String
+    Dim i As Integer
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        OpenFileDialog1.Filter = "db name | *.accdb"
+
+        If OpenFileDialog1.ShowDialog = DialogResult.OK Then
+            TextBox1.Text = OpenFileDialog1.FileName
+            filepath = TextBox1.Text
+            fname = IO.Path.GetFileNameWithoutExtension(OpenFileDialog1.FileName).Replace(" ", "")
+
+
+        End If
+        Try
+
+            Load_SQL_MDB_AllTables_List(TextBox1.Text)
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+    End Sub
+    Private Function Load_SQL_MDB_AllTables_List(ByVal sPath As String) As List(Of String)
+
+        Dim index1 As Integer
+        Dim temp_collection As List(Of String) = Nothing
+        Try
+            index1 = 0
+            'ConnectionString
+            oOleDbConnection = New OleDbConnection()
+            oOleDbConnection.ConnectionString = "Provider =Microsoft.Jet.OLEDB.4.0; Data Source =" & sPath & "; Persist Security Info =False;"
+            oOleDbConnection.ConnectionString = "Provider =Microsoft.ACE.OLEDB.12.0; Data Source =" & sPath & "; Persist Security Info =False;"
+            oOleDbConnection.Open() 'ATTENTION, FONTIONNE QUE POUR X86 ; ATTENTION ONLY FOR x86
+            If oOleDbConnection.State = ConnectionState.Open Then
+                Dim restrictionsValues() As String = {Nothing, Nothing, Nothing, Nothing}
+                oDataTable = oOleDbConnection.GetOleDbSchemaTable(OleDb.OleDbSchemaGuid.Tables, Nothing)
+
+
+                Dim cnt As Integer = 0
+                For Each oDataRow As DataRow In oDataTable.Rows
+                    sTableName = oDataRow("TABLE_NAME").ToString
+                    If oDataRow("TABLE_TYPE").ToString = "TABLE" Then
+
+                        tname(cnt) = (IO.Path.GetFileNameWithoutExtension(sTableName).Replace("~", "")).Replace(" ", "")
+                        ListBox1.Items.Add(sTableName)
+                        cnt += 1
+
+
+                    End If
+
+                Next
+
+            End If
+        Catch ex As Exception
+
+        Finally
+            Load_SQL_MDB_AllTables_List = temp_collection
+        End Try
+
+    End Function
+
+
+
+    Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
+
+        DataGridView1.Rows.Clear()
+        Dim strInvalidChars As String
+        Dim i As Integer
+
+
+        Try
+            Dim Rest() As String = {Nothing, Nothing, ListBox1.SelectedItem.ToString, Nothing}
+            Dim columns As String = "Columns"
+            Dim dt As DataTable = oOleDbConnection.GetSchema(columns, Rest)
+            For Each row As DataRow In dt.Rows
+                Try
+                    Dim target As String = ":$',-./\~ "
+                    '  Dim start As Integer
+                    Dim at As Integer
+                    ' Dim count As Integer
+
+                    Dim anyOf As Char() = target.ToCharArray()
+
+                    at = row.Item("COLUMN_NAME").ToString.IndexOfAny(anyOf, 0, row.Item("COLUMN_NAME").ToString.Length)
+                    If at > -1 Then
+                        DataGridView1.Rows.Add(IO.Path.GetFileNameWithoutExtension(row.Item("COLUMN_NAME").ToString.Remove(at, 1)), "", "", "")
+                    Else
+                        DataGridView1.Rows.Add(IO.Path.GetFileNameWithoutExtension(row.Item("COLUMN_NAME").ToString), "", "", "")
+                    End If
+                Catch ex As Exception
+                    MsgBox(ex.Message)
+                End Try
+
+
+
+
+            Next
+
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+
+
+    End Sub
+
+    Private Function ListBox1_SelectedIndexChanged() As String
+        Throw New NotImplementedException()
+    End Function
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Try
+            'Dim strConnString As String = "Data Source=SHEILA\CONVERTIONTOOL;User ID=sa;Password=Shitbomb1"
+            'Dim conn = New SqlConnection(strConnString)
+            ' Dim cmd As SqlCommand
+
+            ' Dim str As String
+
+
+            'For i = 0 To ListBox1.Items.Count - 1
+            '    'ListBox1.Items(i).ToString()
+            'Next
+
+
+
+            Dim Str2 As String = "use master " &
+                "IF EXISTS(SELECT * FROM sys.databases WHERE NAME = '" & fname & "') " &
+                "DROP DATABASE " & fname & " " &
+                "CREATE DATABASE " & fname & "  ON PRIMARY " &
+                  "(NAME = MyDatabase_Data, " &
+                  " FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL12.CONVERTIONTOOL\MSSQL\DATA\" & fname & ".mdf', " &
+                  " SIZE = 5MB, " &
+                  " MAXSIZE = 10MB, " &
+                  " FILEGROWTH = 10%) " &
+                  " LOG ON " &
+                  "(NAME = MyDatabase_Log, " &
+                  " FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL12.CONVERTIONTOOL\MSSQL\DATA\" & fname & ".ldf', " &
+                  " SIZE = 1MB, " &
+                  " MAXSIZE = 5MB, " &
+                  " FILEGROWTH = 10%) "
+
+
+
+
+
+
+
+            'asdasdasd
+            'For a As Integer = 0 To coubt
+            '    create_table()
+            'Next
+
+            Dim myCommand As SqlCommand = New SqlCommand(Str2, myConn)
+
+            'asdasdasdas
+
+
+
+
+
+
+
+            Try
+                myConn.Open()
+                myCommand.ExecuteNonQuery()
+                For i = 0 To ListBox1.Items.Count - 1
+                    create_table(ListBox1.Items(i).ToString(), tname(i))
+                Next
+
+                MessageBox.Show("Database is created successfully",
+                                "MyProgram", MessageBoxButtons.OK,
+                                 MessageBoxIcon.Information)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+                ' MessageBox.Show("Invalid Database Name (" & fname & ")remove numbers/special characters ")
+                'Form2.TextBox11.Text = TextBox1.Text
+                Form2.ShowDialog()
+
+
+            Finally
+                If (myConn.State = ConnectionState.Open) Then
+
+                    myConn.Close()
+
+                End If
+            End Try
+        Catch ex As Exception
+            MsgBox(ex.Message)
+
+        End Try
+
+
+
+
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        Form3.Show()
+
+    End Sub
+End Class
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+FUNCTION
+
+Imports System.Data.OleDb
+Imports System.Data.SqlClient
+Imports System.Text.RegularExpressions
+Module mdglobalfunction
+    'Public Sub Connection()
+    '    oOleDbConnection = New OleDbConnection()
+    '    oOleDbConnection.ConnectionString = "Provider =Microsoft.Jet.OLEDB.4.0; Data Source =" & sPath & "; Persist Security Info =False;"
+    '    oOleDbConnection.ConnectionString = "Provider =Microsoft.ACE.OLEDB.12.0; Data Source =" & sPath & "; Persist Security Info =False;"
+    '    oOleDbConnection.Open() 'ATTENTION, FONTIONNE QUE POUR X86 ; ATTENTION ONLY FOR x86
+
+    'End Sub
+
+    'Dim a = "if not exists (select * from sysobjects where name= '"
+    'Dim b = " create table "
+    'Dim c = " )"
+
+    Public Sub create_table(ByVal ListBoxItem1 As String, ByVal tname1 As String)
+        'For i = 0 To Form1.ListBox1.Items.Count - 1
+        'Form1.ListBox1.Items(i).ToString()
+
+        Dim target As String = ":/$',~\-"
+        ' Dim start As Integer
+        Dim at As Integer
+        ' Dim count As Integer
+
+        Dim Rest() = {Nothing, Nothing, ListBoxItem1, Nothing}
+        Dim columns As String = "Columns"
+        Dim dt As DataTable = oOleDbConnection.GetSchema(columns, Rest)
+
+        Dim x As Integer = 0
+        Dim str As String = ""
+        Dim anyOf As Char() = target.ToCharArray()
+        For Each row As DataRow In dt.Rows
+
+
+
+            at = row.Item("COLUMN_NAME").ToString.IndexOfAny(anyOf, 0, row.Item("COLUMN_NAME").ToString.Length)
+                If at > -1 Then
+                fldname(x) = If(str = Nothing, Nothing, str & ", ") & "'" & IO.Path.GetFileNameWithoutExtension(row.Item("COLUMN_NAME").ToString.Remove(at, 1)).Replace(" ", "_") & "'" & " Varchar(255) null"
+
+
+            Else
+                fldname(x) = If(str = Nothing, Nothing, str & ", ") & "'" & (IO.Path.GetFileNameWithoutExtension(row.Item("COLUMN_NAME").ToString)).Replace(" ", "_") & "'" & " Varchar(255) null"
+
+            End If
+                str = fldname(x)
+                x += 1
+
+
+
+
+
+
+
+        Next
+        ' str = Regex.Replace(str, ":#$%&'()*,-./\~", "")
+        Try
+            myConn.Close()
+            myConn.Open()
+            Dim Str2 As String = " use " & fname & " " &
+                    "if not exists (select * from sysobjects where name= '" & tname1 & "') " &
+                    "create table  " & tname1 & "( " & str & " )"
+
+            Dim myCommand As SqlCommand = New SqlCommand(Str2, myConn)
+            myCommand.ExecuteNonQuery()
+
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        Finally
+            If (myConn.State = ConnectionState.Open) Then
+
+                myConn.Close()
+
+            End If
+            MessageBox.Show("table created", "MyProgram", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            myConn.Close()
+        End Try
+
+        'Next
+    End Sub
+
+
+
+End Module
